@@ -48,7 +48,6 @@ def part_2(data):
     return sum([c.copies for c in data.values()])
 
 
-
 def main(fname):
     start = time.time()
     data = read_file(fname)
