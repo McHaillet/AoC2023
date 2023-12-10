@@ -70,8 +70,7 @@ def find_start(data):
 def part_1(start, pipe_map):
     start_move1, start_move2 = PIPE_MOVES[get_symbol(pipe_map, start)]
     queue = Queue()
-    queue.put((start + start_move1, 1))
-    queue.put((start + start_move2, 1))
+    queue.put((start + start_move1, 1))  # make one move to find the loop from start back to start (for part2)
     visited = [start, ]
     max_distance = 1
     while not queue.empty():
@@ -84,12 +83,19 @@ def part_1(start, pipe_map):
         queue.put((current_loc + move2, distance + 1))
         if distance > max_distance:
             max_distance = distance
-    return max_distance, visited
+    return max_distance // 2 + 1, visited
 
 
-def part_2(pipe_map, loop):
-    print(len(loop))
-    print(len(set(loop)))
+def part_2(loop):
+    # first use the shoelace formula to calculate the area of the polygon (i.e. the path)
+    area = 0
+    for p1, p2 in zip(loop, loop[1:] + [loop[0]]):
+        area += (p1.real * p2.imag) - (p1.imag * p2.real)
+    area = abs(area) / 2
+    # use picks theorem to find the number of integer points inside the polygon
+    # S = I + B / 2 - 1  (where S is polygon area, I are integer points inside the polygon, B are polygon edge points)
+    inside = area - (len(loop) / 2) + 1
+    return int(inside)
 
 
 def main(fname):
@@ -99,7 +105,7 @@ def main(fname):
     t1 = time.time()
     print(f"Part 1: {total_1}")
     print(f"Ran in {t1-t0} s")
-    total_2 = part_2(pipe_map, loop)
+    total_2 = part_2(loop)
     print(f"Part 2: {total_2}")
     print(f"Ran in {time.time()-t1} s")
     print(f"Total ran in {time.time()-t0} s")
