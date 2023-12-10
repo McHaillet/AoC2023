@@ -32,6 +32,7 @@ def get_symbol(pipe_map, loc):
 
 
 def find_start(data):
+    start = None
     for i, d in enumerate(data):
         if 'S' in d:
             j = d.index('S')
