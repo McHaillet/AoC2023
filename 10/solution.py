@@ -4,12 +4,12 @@ from queue import Queue
 
 
 PIPE_MOVES = {
-    '|': (-1, 1),
-    '-': (-1j, 1j),
-    'L': (-1, 1j),
-    'J': (-1, -1j),
-    '7': (1, -1j),
-    'F': (1, 1j),
+    "|": (-1, 1),
+    "-": (-1j, 1j),
+    "L": (-1, 1j),
+    "J": (-1, -1j),
+    "7": (1, -1j),
+    "F": (1, 1j),
 }
 
 
@@ -34,45 +34,51 @@ def get_symbol(pipe_map, loc):
 def find_start(data):
     start = None
     for i, d in enumerate(data):
-        if 'S' in d:
-            j = d.index('S')
+        if "S" in d:
+            j = d.index("S")
             start = i + j * 1j
             break
     up = get_symbol(data, start - 1)
     down = get_symbol(data, start + 1)
     left = get_symbol(data, start - 1j)
     right = get_symbol(data, start + 1j)
-    down_valid = down is not None and down in '|LJ'
-    right_valid = right is not None and right in '-7J'
-    left_valid = left is not None and left in '-FL'
-    up_valid = up is not None and up in '|F7'
-    start_symbol = ''
+    down_valid = down is not None and down in "|LJ"
+    right_valid = right is not None and right in "-7J"
+    left_valid = left is not None and left in "-FL"
+    up_valid = up is not None and up in "|F7"
+    start_symbol = ""
     match (up_valid, down_valid, left_valid, right_valid):
         case (True, True, False, False):
-            start_symbol = '|'
+            start_symbol = "|"
         case (False, False, True, True):
-            start_symbol = '-'
+            start_symbol = "-"
         case (True, False, True, False):
-            start_symbol = 'J'
+            start_symbol = "J"
         case (True, False, False, True):
-            start_symbol = 'L'
+            start_symbol = "L"
         case (False, True, True, False):
-            start_symbol = '7'
+            start_symbol = "7"
         case (False, True, False, True):
-            start_symbol = 'F'
-    data[int(start.real)] = ''.join([
-        data[int(start.real)][:int(start.imag)],
-        start_symbol,
-        data[int(start.real)][int(start.imag) + 1:]
-    ])
+            start_symbol = "F"
+    data[int(start.real)] = "".join(
+        [
+            data[int(start.real)][: int(start.imag)],
+            start_symbol,
+            data[int(start.real)][int(start.imag) + 1 :],
+        ]
+    )
     return start, data
 
 
 def part_1(start, pipe_map):
     start_move1, start_move2 = PIPE_MOVES[get_symbol(pipe_map, start)]
     queue = Queue()
-    queue.put((start + start_move1, 1))  # make one move to find the loop from start back to start (for part2)
-    visited = [start, ]
+    queue.put(
+        (start + start_move1, 1)
+    )  # make one move to find the loop from start back to start (for part2)
+    visited = [
+        start,
+    ]
     max_distance = 1
     while not queue.empty():
         current_loc, distance = queue.get()
