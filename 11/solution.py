@@ -17,7 +17,7 @@ def index_galaxies(universe):
     points = []
     for x, row in enumerate(universe):
         for y, col in enumerate(row):
-            if col == '#':
+            if col == "#":
                 points.append((x, y))
     return points
 
@@ -27,10 +27,10 @@ def get_dist_weights(data, expansion_factor):
     weights = np.ones((width, height))
     for j in range(len(data[0])):
         col = [r[j] for r in data]
-        if '#' not in col:
+        if "#" not in col:
             weights[:, j] = expansion_factor
     for i, row in enumerate(data):
-        if '#' not in row:
+        if "#" not in row:
             weights[i, :] = expansion_factor
     return weights
 
@@ -40,15 +40,15 @@ def galaxy_sum(data, expansion=2):
     galaxies = index_galaxies(data)
     total_distance = 0
     for i, p1 in enumerate(galaxies):
-        for p2 in galaxies[i + 1:]:
+        for p2 in galaxies[i + 1 :]:
             r_start = p1[0] if p1[0] <= p2[0] else p2[0]
             r_end = p2[0] + 1 if p1[0] <= p2[0] else p1[0] + 1
             c_start = p1[1] if p1[1] <= p2[1] else p2[1]
             c_end = p2[1] + 1 if p1[1] <= p2[1] else p1[1] + 1
             distance = (
-                    dist_weights[r_start:r_end, p1[1]].sum()
-                    + dist_weights[p2[0], c_start:c_end].sum()
-                    - 2
+                dist_weights[r_start:r_end, p1[1]].sum()
+                + dist_weights[p2[0], c_start:c_end].sum()
+                - 2
             )
             total_distance += distance
     return int(total_distance)
