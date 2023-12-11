@@ -1,7 +1,6 @@
 import argparse
 import time
 import numpy as np
-from scipy.spatial.distance import cdist
 
 
 def read_file(fname):
